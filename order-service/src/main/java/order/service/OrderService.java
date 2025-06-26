@@ -52,8 +52,6 @@ public class OrderService {
 
             deleteOrderKafka(id);
 
-            orders.remove(id);
-
             System.out.println("[Kafka] OrderCancelled - ID: " + id);
             return "Order " + id + " cancelled and removed.";
         } else {
@@ -68,8 +66,6 @@ public class OrderService {
             order.status = Order.Status.CANCELLED;
 
             deleteOrderKafka(id);
-
-            orders.remove(id);
 
             System.out.println("[Kafka] OrderCancelled - ID: " + id);
             return "Order " + id + " cancelled and removed.";
