@@ -10,15 +10,12 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.time.Duration;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -29,7 +26,6 @@ import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
 @SpringBootApplication(scanBasePackages = {
 	"com.example.inventory_service"
 })
-@EnableJpaRepositories("com.example.inventory_service")
 @EntityScan("com.example.inventory_service.*")
 public class InventoryServiceApplication {
 
@@ -38,22 +34,22 @@ public class InventoryServiceApplication {
 //	@Autowired
 //	private static BananaRepository bananaRepository;
 
-	private static final Map<String, String> bananaInventory = Map.of("banana", "banana",
-		"banana2", "banana",
-		"banana3", "banana",
-		"banana4", "banana",
-		"banana5", "banana",
-		"banana6", "banana",
-		"banana7", "banana",
-		"banana8", "banana",
-		"banana9", "banana",
-		"banana0", "banana");
-	private static Integer inventorySize = bananaInventory.size();
-
 	public static void main(String[] args) {
 		SpringApplication.run(InventoryServiceApplication.class, args);
 		System.out.println("Inventory Service Application Started");
 
+
+		Map<String, String> bananaInventory = Map.of("banana", "banana",
+			"banana2", "banana",
+			"banana3", "banana",
+			"banana4", "banana",
+			"banana5", "banana",
+			"banana6", "banana",
+			"banana7", "banana",
+			"banana8", "banana",
+			"banana9", "banana",
+			"banana0", "banana");
+		Integer inventorySize = bananaInventory.size();
 
 		Properties consumerProps = new Properties();
 		consumerProps.setProperty(BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -84,15 +80,20 @@ public class InventoryServiceApplication {
 						record.value()
 					);
 					String orderStatus = record.value();
-					log.info("Order status is PENDING");
 
-					if (orderStatus.equals("PENDING") && inventorySize > 0) {
-						log.info("There is a banana!!!");
+					if (!orderStatus.isBlank() && orderStatus.equals("PENDING") && inventorySize > 0) {
+						log.info("Order status is PENDING and there is a banana!!!");
 						inventorySize--;
 
 						producer.send(new ProducerRecord<>("stocks", record.key(), orderStatus));
 						log.info("Stock status is PENDING");
+
+					} else if (!orderStatus.isBlank() && orderStatus.equals("CANCELLED")) {
+						inventorySize++;
+						producer.send(new ProducerRecord<>("stocks", record.key(), orderStatus));
+						log.info("Stock status is CANCELLED");
 					}
+					log.info("There are {} bananas left", inventorySize);
 				}
 			}
 		}

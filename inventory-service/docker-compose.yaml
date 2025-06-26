@@ -36,35 +36,6 @@ services:
 #      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
-#  schema-registry:
-#    image: confluentinc/cp-schema-registry:7.7.1
-#    restart: always
-#    container_name: kws-schema-registry
-#    hostname: schema-registry
-#    depends_on:
-#      - broker
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-#      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
-#      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
-#
-#  schema-registry-ui:
-#    image: landoop/schema-registry-ui:latest
-#    hostname: schema-registry-ui
-#    container_name: kws-schema-registry-ui
-#    ports:
-#      - 8000:8000
-#    environment:
-#      SCHEMAREGISTRY_URL: http://schema-registry:8081
-#      ALLOW_GLOBAL: 'true'
-#      ALLOW_TRANSITIVE: 'true'
-#      ALLOW_DELETION: 'true'
-#      PORT: 8000
-#      PROXY: 'true'
-#    depends_on:
-#      - schema-registry
 
   akhq:
     image: tchiotludo/akhq:0.25.1
@@ -81,18 +52,3 @@ services:
                 bootstrap.servers: "broker:29092"
               schema-registry:
                 url: "http://schema-registry:8081"
-
-  inventory-db:
-    image: postgres
-    environment:
-      POSTGRES_USER: puser
-      POSTGRES_PASSWORD: ppwd
-      PGDATA: /data/postgres
-      POSTGRES_DB: inventory
-    volumes:
-      - db:/data/postgres
-    ports:
-      - "5432:5432"
-
-volumes:
-  db:
