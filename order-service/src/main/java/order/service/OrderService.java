@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
@@ -43,22 +44,22 @@ public class OrderService {
         return "Order created with ID: " + orderId;
     }
 
-//    @PostMapping("/cancelOrder")
-//    public String cancelOrderCommand(@RequestParam int id) {
-//        Order order = orders.get(id);
-//        if (order != null && order.status == Order.Status.PENDING) {
-//            order.status = Order.Status.CANCELLED;
-//
-//            deleteOrderKafka(id);
-//
-//            orders.remove(id);
-//
-//            System.out.println("[Kafka] OrderCancelled - ID: " + id);
-//            return "Order " + id + " cancelled and removed.";
-//        } else {
-//            return "Order not found or already cancelled.";
-//        }
-//    }
+    @PostMapping("/cancelOrder")
+    public String cancelOrderCommand(@RequestParam int id) {
+        Order order = orders.get(id);
+        if (order != null && order.status == Order.Status.PENDING) {
+            order.status = Order.Status.CANCELLED;
+
+            deleteOrderKafka(id);
+
+            orders.remove(id);
+
+            System.out.println("[Kafka] OrderCancelled - ID: " + id);
+            return "Order " + id + " cancelled and removed.";
+        } else {
+            return "Order not found or already cancelled.";
+        }
+    }
     
     @PutMapping("/orders/{id}/cancel")
     public String cancelOrder(@PathVariable int id) {

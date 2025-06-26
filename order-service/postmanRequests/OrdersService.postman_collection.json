@@ -50,7 +50,7 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/orders/2/cancel",
+					"raw": "http://localhost:8080/orders/1/cancel",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -58,8 +58,33 @@
 					"port": "8080",
 					"path": [
 						"orders",
-						"2",
+						"1",
 						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CancelOrderPost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/cancelOrder?id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cancelOrder"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
 					]
 				}
 			},
