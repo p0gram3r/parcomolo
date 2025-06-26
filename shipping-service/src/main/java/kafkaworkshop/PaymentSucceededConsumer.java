@@ -35,7 +35,7 @@ public class PaymentSucceededConsumer {
             for (ConsumerRecord<String, String> record : records) {
                 String orderID = record.key();
                 log.info(("Received payments: " + record.value()));
-                if (record.value().equals("succeeded")) {
+                if (record.value().equals("successful")) {
                     ShippingProducer.processShipping(orderID);
                 }
             }
